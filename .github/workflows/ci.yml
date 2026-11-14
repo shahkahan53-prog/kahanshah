@@ -1,0 +1,105 @@
+name: CI/CD Pipeline - Food Ordering System
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+
+jobs:
+  # Job 1 to 3: Test and Lint
+  test:
+    name: Run Automated Tests & Quality Checks
+    runs-on: ubuntu-latest
+
+    services:
+      # Redis service for integration caching tests
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      # Step 1: Check out the code
+      - name: Check out the code
+        uses: actions/checkout@v4
+
+      # Step 2: Set up Python and install dependencies
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r backend/requirements.txt
+
+      # Step 3: Run automated tests with pytest
+      - name: Run automated tests with pytest
+        env:
+          REDIS_URL: redis://localhost:6379/0
+          JWT_SECRET: ci-test-secret-key-food-app
+        run: |
+          cd backend
+          python -m pytest test_api.py -v
+
+  # Job 4: Build Docker image (runs only if test passes)
+  build-docker:
+    name: Build Docker Container Image
+    needs: test
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      # Step 4: Build the Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t food-ordering-backend:latest ./backend
+          docker tag food-ordering-backend:latest food-ordering-backend:${{ github.sha }}
+
+  # Job 5: Deploy to hosting platform (runs only if all earlier steps pass)
+  deploy:
+    name: Deploy to Hosting Platform (Render / Railway)
+    needs: [test, build-docker]
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v4
+
+      # Step 5: Deploy to hosting platform, only if all earlier steps pass
+      - name: Trigger Hosting Deployment Webhook (Render / Railway)
+        run: |
+          echo "All automated tests and Docker build passed successfully!"
+          if [ -n "${{ secrets.RENDER_DEPLOY_HOOK }}" ]; then
+            echo "Triggering Render auto-deployment..."
+            curl -fsS -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+          elif [ -n "${{ secrets.RAILWAY_TOKEN }}" ]; then
+            echo "Deploying to Railway..."
+            npx @railway/cli up --service food-ordering-backend
+          else
+            echo "No live deployment secret configured. Simulated deployment passed with exit code 0."
+          fi
+          echo "Deployment step completed successfully!"
+
+  # Notification step on failure
+  notify-on-failure:
+    name: Alert Team on Pipeline Failure
+    runs-on: ubuntu-latest
+    needs: [test, build-docker, deploy]
+    if: failure()
+    steps:
+      - name: Alert Team
+        run: |
+          echo "::error::CI/CD Pipeline failed! Deployment has been blocked to protect production."

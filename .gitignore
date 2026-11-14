@@ -1,0 +1,24 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+*.sqlite3-journal
+
+# Node
+node_modules/
+dist/
+.vite/
+
+# Gradle & Kotlin
+.gradle/
+build/
+*.hprof
+
+# Android
+android-app/.gradle/
+android-app/app/build/
+android-app/local.properties
+.idea/
+*.iml

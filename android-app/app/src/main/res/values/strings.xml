@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">SwadBox Food App</string>
+    <string name="login_title">Welcome Back</string>
+    <string name="login_subtitle">Sign in to order authentic Indian snacks</string>
+    <string name="signup_title">Create Account</string>
+    <string name="email_hint">Email address</string>
+    <string name="password_hint">Password</string>
+    <string name="fullname_hint">Full Name</string>
+    <string name="btn_login">Sign In</string>
+    <string name="btn_signup">Create Account</string>
+    <string name="btn_place_order">Place Order</string>
+    <string name="menu_title">Our Fresh Menu</string>
+    <string name="cart_title">Your Cart</string>
+    <string name="order_status_title">Order Status</string>
+</resources>

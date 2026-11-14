@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  # Redis in-memory cache for ultra-fast response & TTL management
+  redis:
+    image: redis:7-alpine
+    container_name: food_ordering_redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    command: redis-server --appendonly yes
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  # Python FastAPI Backend API with Redis Caching and JWT Auth
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: food_ordering_backend
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      - REDIS_URL=redis://redis:6379/0
+      - JWT_SECRET=swadbox-super-secure-jwt-secret-key-2026
+      - PORT=8000
+    depends_on:
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./backend:/app
+
+volumes:
+  redis_data:
