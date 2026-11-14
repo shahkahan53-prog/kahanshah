@@ -263,6 +263,10 @@ def add_or_update_menu_item(item: MenuItemInput):
         "cache_invalidated": True
     }
 
+@app.post("/api/admin/menu")
+def add_or_update_menu_item_alias(item: MenuItemInput):
+    return add_or_update_menu_item(item)
+
 # Admin: Explicit Cache Invalidation endpoint
 @app.post("/admin/cache/clear")
 def clear_menu_cache():
@@ -272,6 +276,10 @@ def clear_menu_cache():
         "message": "Redis cache key 'menu:all' cleared successfully",
         "cache_invalidated": True
     }
+
+@app.post("/api/admin/cache/clear")
+def clear_menu_cache_alias():
+    return clear_menu_cache()
 
 # Payment: Process Payment Gateway
 @app.post("/api/payment/process")

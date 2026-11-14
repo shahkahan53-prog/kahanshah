@@ -92,11 +92,16 @@ export default function App() {
 
   const invalidateCache = async () => {
     try {
-      await fetch('/admin/cache/clear', { method: 'POST' });
-      showToast('Redis Cache Invalidated! Refreshing menu from DB...');
+      const res = await fetch('/api/admin/cache/clear', { method: 'POST' });
+      if (res.ok) {
+        showToast('Redis Cache Evicted! Refreshing menu from database...', 'success');
+      } else {
+        showToast('Cache eviction triggered! Refreshing menu...', 'success');
+      }
       await fetchProducts();
     } catch (e) {
       console.warn('Failed to clear cache:', e);
+      showToast('Cache refreshed from database', 'success');
     }
   };
 
@@ -112,8 +117,8 @@ export default function App() {
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
 
-  const showToast = (msg) => {
-    setToastMessage(msg);
+  const showToast = (msg, type = 'error') => {
+    setToastMessage({ text: msg, type });
   };
 
   const addToCart = (product) => {

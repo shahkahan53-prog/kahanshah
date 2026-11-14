@@ -11,6 +11,22 @@ export default defineConfig({
         target: 'http://localhost:8000',
         changeOrigin: true
       },
+      '/admin': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/menu': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/auth': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
+      '/orders': {
+        target: 'http://localhost:8000',
+        changeOrigin: true
+      },
       '/uploads': {
         target: 'http://localhost:8000',
         changeOrigin: true
@@ -18,4 +34,3 @@ export default defineConfig({
     }
   }
 })
-

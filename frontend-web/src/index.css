@@ -237,6 +237,19 @@ button {
   font-size: 18px;
 }
 
+.toast-icon-success {
+  color: #16A34A;
+  font-size: 18px;
+}
+
+.toast-success {
+  border-color: #86EFAC;
+}
+
+.toast-error {
+  border-color: #FECACA;
+}
+
 .toast-text {
   font-size: 14px;
   font-weight: 600;
