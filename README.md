@@ -1,6 +1,14 @@
 # SwadBox - Full-Stack Food Ordering Platform
 ### Python FastAPI • Redis Caching • Kotlin Android App • Docker & CI/CD
 
+[![CI/CD Pipeline](https://github.com/shahkahan53-prog/kahanshah/actions/workflows/ci.yml/badge.svg)](https://github.com/shahkahan53-prog/kahanshah/actions)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat&logo=fastapi)
+![Redis](https://img.shields.io/badge/redis-%23DD0031.svg?style=flat&logo=redis&logoColor=white)
+![Kotlin](https://img.shields.io/badge/kotlin-%237F52FF.svg?style=flat&logo=kotlin&logoColor=white)
+![Android](https://img.shields.io/badge/Android-3DDC84?style=flat&logo=android&logoColor=white)
+![Docker](https://img.shields.io/badge/docker-%230db7ed.svg?style=flat&logo=docker&logoColor=white)
+![GitHub Actions](https://img.shields.io/badge/github%20actions-%232671E8.svg?style=flat&logo=githubactions&logoColor=white)
+
 A production-grade, full-stack food ordering and delivery system based on the **SwadBox** project specifications. Featuring an asynchronous **Python FastAPI backend with Redis caching**, a native **Kotlin Android mobile application (MVVM)**, multi-container **Docker Compose** orchestration, and automated **GitHub Actions CI/CD pipeline**.
 
 ---
