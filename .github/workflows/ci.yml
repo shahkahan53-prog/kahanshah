@@ -10,7 +10,7 @@ jobs:
   # Job 1 to 3: Test and Lint
   test:
     name: Run Automated Tests & Quality Checks
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
 
     services:
       # Redis service for integration caching tests
@@ -54,7 +54,7 @@ jobs:
   build-docker:
     name: Build Docker Container Image
     needs: test
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     steps:
       - name: Check out code
         uses: actions/checkout@v4
@@ -72,7 +72,7 @@ jobs:
   deploy:
     name: Deploy to Hosting Platform (Render / Railway)
     needs: [test, build-docker]
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
     steps:
       - name: Check out code
