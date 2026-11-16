@@ -3,6 +3,7 @@ import uuid
 import random
 from typing import List, Optional, Dict, Any
 from datetime import datetime, timedelta
+from contextlib import asynccontextmanager
 from fastapi import FastAPI, HTTPException, Header, Depends, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
@@ -12,7 +13,12 @@ from database import init_db, get_connection, hash_password
 from redis_cache import cache
 from auth_jwt import create_access_token, verify_access_token
 
-app = FastAPI(title="Food Ordering App API", version="1.0.0")
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    init_db()
+    yield
+
+app = FastAPI(title="Food Ordering App API", version="1.0.0", lifespan=lifespan)
 
 # CORS Configuration
 app.add_middleware(
@@ -22,11 +28,6 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
-
-# Initialize DB on startup
-@app.on_event("startup")
-def startup():
-    init_db()
 
 # Mount uploads directory
 uploads_dir = os.path.join(os.path.dirname(__file__), "uploads")
